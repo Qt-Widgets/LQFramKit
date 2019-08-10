@@ -1,7 +1,9 @@
 #pro.user
 LQFramKit.pro.user
 bin/*
+Bin/*
 build_/*
+tempFiles/*
 *.Debug
 *.Release
 *Makefile
@@ -9,3 +11,8 @@ build_/*
 *moc_*.cpp
 *ui_*.h
 
+*.lib
+*.dll
+*.a
+*.so
+*.exe

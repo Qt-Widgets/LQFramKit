@@ -23,12 +23,18 @@
 #include "demo_customcombox.h"          //自定义ComBox
 #include "demo_splashscreen.h"          //启动界面
 #include "demo_startwidget.h"           //个性化启动界面
-#include "nbaseswitchbutton.h"          //switch切换开关
+#include "LQFormWidgetIncLib.h"
+//#include "nbaseswitchbutton.h"          //switch切换开关
 #include "demo_messagebox.h"            //自定义消息框
 #include "demo_rightdownmessagebox.h"   //右下角消息弹窗
 #include "demo_drawprogressbar.h"       //导航进度条
+
+#ifdef Q_OS_WIN
 #include "demo_ruler.h"                 //尺子
+#endif
+
 #include "demo_ipaddresswidget.h"       //IP地址输入框
+
 #include "demo_msgnotify.h"             //消息弹窗提醒
 #include "demo_navlistview.h"           //树状导航
 #include "demo_tabwidget.h"             //tab窗口
@@ -38,6 +44,8 @@
 #include "demo_perfmon.h"               //性能监测
 #include "demo_imagebrowser.h"          //图片旋转缩放
 #include "demo_zxing.h"                 //二维码测试
+
+#include "CreateProjectFileForm.h"      //生成工程模板
 
 ExampleWidget::ExampleWidget(QWidget *parent) :
     QWidget(parent),
@@ -51,6 +59,12 @@ ExampleWidget::ExampleWidget(QWidget *parent) :
 ExampleWidget::~ExampleWidget()
 {
     delete ui;
+
+    if ( m_pCreatePro != NULL )
+    {
+        delete m_pCreatePro;
+        m_pCreatePro = NULL;
+    }
 }
 
 void ExampleWidget::slotToleranceBarValue(const int &value)
@@ -70,14 +84,16 @@ void ExampleWidget::init()
     this->setWindowTitle("控件测试集合");
 
     //加载控件样式
-    QFile file(":/image/css/style_demo.css");
-    file.open(QFile::ReadOnly);
-    QString qss = QString(file.readAll());
-    setStyleSheet(qss);
+//    QFile file(":/image/css/style_demo.css");
+//    file.open(QFile::ReadOnly);
+//    QString qss = QString(file.readAll());
+//    setStyleSheet(qss);
 
     ui->tabWidget->setCurrentIndex(0);
 
     initConnect ();
+
+    m_pCreatePro = Q_NULLPTR;
 }
 
 void ExampleWidget::initConnect()
@@ -168,12 +184,14 @@ void ExampleWidget::on_pushButton_8_clicked()
 
 void ExampleWidget::on_pushButton_9_clicked()
 {
+#ifndef Q_OS_WIN
     Demo_ImageBrowser *image = new Demo_ImageBrowser("图片旋转缩放demo");
     image->setWindowModality(Qt::ApplicationModal);
     image->show();
 
     QTimer::singleShot(20000,image,SLOT(deleteLater()));
     ui->textEdit->append("图片旋转缩放已经启动，20秒之后将关闭!");
+#endif
 }
 
 void ExampleWidget::on_pushButton_10_clicked()
@@ -289,12 +307,14 @@ void ExampleWidget::on_pushButton_20_clicked()
 
 void ExampleWidget::on_pushButton_21_clicked()
 {
+#ifdef Q_OS_WIN
     Demo_Ruler *ruler = new Demo_Ruler("尺子demo");
     ruler->setWindowModality (Qt::ApplicationModal);
     ruler->show ();
 
     QTimer::singleShot (15000,ruler,SLOT(deleteLater()));
     ui->textEdit->append ("尺子界面已经启动，15秒之后将关闭!");
+#endif
 }
 
 void ExampleWidget::on_pushButton_22_clicked()
@@ -366,4 +386,14 @@ void ExampleWidget::on_pushButton_28_clicked()
 
     QTimer::singleShot (10000,wave,SLOT(deleteLater()));
     ui->textEdit->append ("波浪进度条已经运行，10秒后将关闭!");
+}
+
+void ExampleWidget::on_pushButton_29_clicked()
+{
+    if ( m_pCreatePro == Q_NULLPTR)
+    {
+        m_pCreatePro = new CreateProjectFileForm;
+    }
+
+    m_pCreatePro->show ();
 }

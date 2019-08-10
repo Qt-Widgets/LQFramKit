@@ -3,8 +3,10 @@
 # Project created by QtCreator 2017-03-21T22:47:02
 #
 #-------------------------------------------------
+include($$PWD/../LQGlobal.pri)
+include($$PWD/../LQ_LibForAdditions.pri)
 
-QT       += gui core
+QT       += gui core widgets xml sql network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,42 +15,33 @@ TEMPLATE = app
 
 DEFINES +=DEBUG_OUT
 
+
+
+include($$PWD/demo/demo.pri)
+
+INCLUDEPATH +=$$PWD/../LQ3rdparty/QZXing/QZXing
+INCLUDEPATH +=$$PWD/../LQTools/inc
+INCLUDEPATH +=$$PWD/../LQInstrumentation/inc
+INCLUDEPATH +=$$PWD/../LQFormWidget/inc
+INCLUDEPATH +=$$PWD/../LQFormWidget/inc/tabWidget
+INCLUDEPATH +=$$PWD/../LQFormWidget/inc/drawprogressbar
+INCLUDEPATH +=$$PWD/../LQFormWidget/inc/messageWidget
+INCLUDEPATH +=$$PWD/../LQFormWidget/inc/msgNotify
+INCLUDEPATH +=$$PWD/../LQChart/inc
+INCLUDEPATH +=$$PWD/demo
+
+
+
+DEPENDPATH  +=$$PWD/../LQ3rdparty/QZXing/QZXing
+DEPENDPATH  +=$$PWD/../LQTools
+DEPENDPATH  +=$$PWD/../LQInstrumentation
+DEPENDPATH  +=$$PWD/../LQFormWidget
+DEPENDPATH  +=$$PWD/../LQChart
+
 SOURCES += \
     main.cpp \
     examplewidget.cpp
 
-win32{
-    CONFIG  += debug_and_release
-    CONFIG(release,debug|release){
-        target_path = ../build_/release
-    }else{
-        target_path = ../build_/debug
-    }
-    DESTDIR =../bin
-    MOC_DIR = $$target_path/moc
-    RCC_DIR = $$target_path/rcc
-    UI_DIR =  $$target_path/ui
-    OBJECTS_DIR = $$target_path/obj
-}
-
-win32:{
-    LIBS += -L../bin/ -lLQInstrumentation\
-    -lLQFormWidget\
-    -lLQAuxiliaryTools\
-    -lLQChart
-}
-
-DEPENDPATH += ../bin
-
-# import dll file
-include(../LQInstrumentation/lqinstrumentation_inc.pri)
-include(../LQFormWidget/lqformwidget_inc.pri)
-include(../LQAuxiliaryTools/lqauxiliarytools_inc.pri)
-include(../LQChart/lqchart_inc.pri)
-
-#import demo fle
-include($$PWD/demo/demo.pri)
-INCLUDEPATH +=$$PWD/demo
 
 
 FORMS += \
@@ -58,5 +51,14 @@ HEADERS += \
     examplewidget.h
 
 RESOURCES += \
-    ExampleImage.qrc
+    ../LQRes/ExampleImage.qrc
 
+LIBS += -L$${DIR_DEPEND_DEST} -lLQTools$${FILE_POSTFIX}
+LIBS += -L$${DIR_DEPEND_DEST} -lLQChart$${FILE_POSTFIX}
+LIBS += -L$${DIR_DEPEND_DEST} -lLQFormWidget$${FILE_POSTFIX}
+LIBS += -L$${DIR_DEPEND_DEST} -lLQInstrumentation$${FILE_POSTFIX}
+LIBS += -L$${DIR_DEPEND_QZXING_DEST} -lQZXing$${FILE_POSTFIX}
+
+linux:{
+    LIBS +=-liconv
+}
